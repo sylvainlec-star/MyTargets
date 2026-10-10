@@ -16,6 +16,8 @@
 package de.dreier.mytargets.features.statistics
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import de.dreier.mytargets.R
 import de.dreier.mytargets.base.db.AppDatabase
 import de.dreier.mytargets.shared.models.db.Round
@@ -27,7 +29,14 @@ import java.io.IOException
 import java.io.Writer
 import java.util.*
 
-class CsvExporter(private val context: Context, database: AppDatabase) {
+class CsvExporter(context: Context, database: AppDatabase) {
+
+    /**
+     * Labels (column headers and a few values) are always written in English, independent of
+     * the language the app or the system is currently using, so that exported files have
+     * stable, machine-friendly headers.
+     */
+    private val resources = englishResources(context)
 
     private val trainingDAO = database.trainingDAO()
     private val roundDAO = database.roundDAO()
@@ -46,19 +55,19 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
     fun writeExportData(writer: Writer, roundIds: List<Long>) {
         val csv = CsvBuilder(writer)
         csv.enterScope()
-        csv.add(context.getString(R.string.title))
-        csv.add(context.getString(R.string.date))
-        csv.add(context.getString(R.string.standard_round))
-        csv.add(context.getString(R.string.indoor))
-        csv.add(context.getString(R.string.bow))
-        csv.add(context.getString(R.string.arrow))
-        csv.add(context.getString(R.string.round))
-        csv.add(context.getString(R.string.distance))
-        csv.add(context.getString(R.string.target))
-        csv.add(context.getString(R.string.passe))
-        csv.add(context.getString(R.string.timestamp))
-        csv.add(context.getString(R.string.points))
-        csv.add(context.getString(R.string.arrow_numbers))
+        csv.add(resources.getString(R.string.title))
+        csv.add(resources.getString(R.string.date))
+        csv.add(resources.getString(R.string.standard_round))
+        csv.add(resources.getString(R.string.indoor))
+        csv.add(resources.getString(R.string.bow))
+        csv.add(resources.getString(R.string.arrow))
+        csv.add(resources.getString(R.string.round))
+        csv.add(resources.getString(R.string.distance))
+        csv.add(resources.getString(R.string.target))
+        csv.add(resources.getString(R.string.passe))
+        csv.add(resources.getString(R.string.timestamp))
+        csv.add(resources.getString(R.string.points))
+        csv.add(resources.getString(R.string.arrow_numbers))
         csv.add("x")
         csv.add("y")
         csv.newLine()
@@ -81,11 +90,11 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
         // StandardRound
         csv.add(
             t.standardRoundId?.let { standardRoundDAO.loadStandardRoundOrNull(it) }?.name
-                ?: context.getString(R.string.practice)
+                ?: resources.getString(R.string.practice)
         )
         // Indoor
         csv.add(
-            if (t.environment.indoor) context.getString(R.string.indoor) else context.getString(
+            if (t.environment.indoor) resources.getString(R.string.indoor) else resources.getString(
                 R.string.outdoor
             )
         )
@@ -132,6 +141,13 @@ class CsvExporter(private val context: Context, database: AppDatabase) {
             csv.exitScope()
         }
         csv.exitScope()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun englishResources(context: Context): Resources {
+        val config = Configuration(context.resources.configuration)
+        config.locale = Locale.ENGLISH
+        return Resources(context.assets, context.resources.displayMetrics, config)
     }
 
     private class CsvBuilder(private val writer: Writer) {
