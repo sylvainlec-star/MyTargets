@@ -46,6 +46,9 @@ allprojects {
         google()
         maven { url 'https://jitpack.io' }
         maven { url 'https://clojars.org/repo/' }
+        // JCenter has been shut down and some of the artifacts this (archived) project depends on
+        // are no longer served by it. This mirror keeps an archive of them; it is only a fallback.
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
     }
 }
 
