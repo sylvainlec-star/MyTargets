@@ -29,10 +29,6 @@ if (hasProperty('CROWDIN_API_KEY')) {
         commandLine '../make_screenshots.sh'
     }
 
-    if (HAS_PLAY_STORE_SECRET) {
-        play {
-            serviceAccountCredentials = file('../googlePlayAndroidDeveloper.json')
-            track = 'beta'
-        }
-    }
+    // The Gradle Play Publisher plugin (com.github.triplet.play) was removed from app/build.gradle,
+    // so the play { } publishing configuration is no longer available.
 }
