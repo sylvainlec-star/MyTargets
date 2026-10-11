@@ -16,6 +16,7 @@
 package de.dreier.mytargets.features.help
 
 import android.content.Intent
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.annotation.CallSuper
@@ -26,7 +27,6 @@ import de.dreier.mytargets.base.navigation.NavigationController
 import de.dreier.mytargets.databinding.FragmentWebBinding
 import de.dreier.mytargets.features.help.licences.LicencesActivity
 import de.dreier.mytargets.utils.ToolbarUtils
-import uk.co.hassie.library.versioninfomdialog.VersionInfoMDialog
 import java.io.IOException
 
 /**
@@ -81,9 +81,18 @@ class HelpFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_version_info -> {
-                VersionInfoMDialog.Builder(context)
-                    .setCopyrightText(R.string.app_copyright)
-                    .setVersionPrefix(R.string.version_prefix)
+                val ctx = requireContext()
+                val versionName = try {
+                    ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
+                } catch (e: Exception) {
+                    ""
+                }
+                AlertDialog.Builder(ctx)
+                    .setMessage(
+                        "${getString(R.string.version_prefix)} $versionName\n\n" +
+                                getString(R.string.app_copyright)
+                    )
+                    .setPositiveButton(android.R.string.ok, null)
                     .show()
                 return true
             }

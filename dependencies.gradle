@@ -46,7 +46,6 @@ ext {
             timber               : '4.7.1',
             truth                : '1.0',
             uiAutomator          : '2.2.0-alpha1',
-            versionInfoDialog    : '0.1.0'
     ]
 
     dependencies = [
@@ -143,7 +142,6 @@ ext {
 
             androidLanguages              : "com.github.delight-im:Android-Languages:$libraryVersion.androidLanguages",
 
-            versionInfoMaterialDialog     : "uk.co.hassie:version-info-material-dialog:$libraryVersion.versionInfoDialog",
 
             signaturePad                  : "com.github.gcacace:signature-pad:$libraryVersion.signaturePad",
 

@@ -217,7 +217,6 @@ dependencies {
 
     implementation dependencies.androidLanguages
 
-    implementation dependencies.versionInfoMaterialDialog
 
     implementation dependencies.signaturePad
 
