@@ -13,33 +13,11 @@
  * GNU General Public License for more details.
  */
 
-import org.ajoberstar.grgit.Grgit
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.ajoberstar:grgit:2.1.0'
-    }
-}
-
+// The original script used org.ajoberstar:grgit (hosted on the now defunct JCenter/Bintray)
+// to derive the version from git tags. That dependency can no longer be resolved, so the
+// fallback values are used.
 ext {
-    try {
-        git = Grgit.open()
-        gitVersionCode = git.tag.list().size()
-        gitVersionName = git.describe()
-                .replace("v", "")
-                .replace("_b", "-Beta")
-                .replace("_rc", "-RC")
-        if(System.getenv('TRAVIS') == 'true') {
-            gitBranchName = System.getenv('TRAVIS_BRANCH')
-        } else {
-            gitBranchName = git.branch.getCurrent().name
-        }
-    } catch(Exception e) {
-        gitVersionCode = 1
-        gitVersionName = "debug"
-        gitBranchName = "debug"
-    }
+    gitVersionCode = 1
+    gitVersionName = "debug"
+    gitBranchName = System.getenv('TRAVIS') == 'true' ? System.getenv('TRAVIS_BRANCH') : "debug"
 }
