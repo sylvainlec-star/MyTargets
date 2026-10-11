@@ -84,6 +84,9 @@ android {
             applicationIdSuffix '.debug'
             signingConfig signingConfigs.debug
             testCoverageEnabled true
+            // Debug builds are not minified and exceed the 64K method limit (see also the
+            // MultiDex.install call in ApplicationInstance).
+            multiDexEnabled true
         }
         release {
             signingConfig signingConfigs.release
